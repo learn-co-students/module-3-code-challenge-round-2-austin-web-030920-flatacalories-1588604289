@@ -2,6 +2,8 @@
 const url =  "http://localhost:3000/characters";
 let charInfo;
 
+
+
 document.addEventListener("DOMContentLoaded", () => {
     fetch (url)
     .then (resp => resp.json())
@@ -10,31 +12,23 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function dropDisplayChar(json){
-    let dropDown = document.getElementById('#chacter-names');
-    
-    let defaultChar = document.createElement('option');
-        defaultChar.text = 'Select a Character';
-    
-    console.log(defaultChar)
-    dropDown.add(defaultChar);
-    
-    let url = json;
-          response.json().then(function(jsonP) {  
-            let option;
-        
-            for (let i = 0; i < url.length; i++) {
-              option = document.createElement('option');
-                option.text = url[i].name;
-                option.value = url[i].abbreviation;
-                dropdown.add(option);
-            }    
-          });  
+    let dropDown = document.getElementById('character-names');
+    let x = json;
+    let chosenOne;
+
+            for (let i = 0; i < x.length; i++) {
+
+                option = document.createElement('option');
+                option.text = x[i].name;
+                let yes = option.value = x[i].id;
+                    yes.innerText = chosenOne
+                dropDown.add(option);
+            }
+        mainDisplayChar(chosenOne)
         };
 
 
-function mainDisplayChar(option){
-    let chosenOne = option;
-
+function mainDisplayChar(chosenOne){
     let name = document.querySelector('.name')
         name.inerText = chosenOne.name;
     
@@ -48,7 +42,7 @@ function mainDisplayChar(option){
 function addCals(event){
     let li = document.createElement('li');
         li.innerHTML = event.target.input.value
-    option.calories = li
+        
 
     fetch(url, {
         method: 'PATCH',
@@ -58,6 +52,4 @@ function addCals(event){
     },
     body: JSON.stringify({calories: chosenOne.calories})
     });
-
-
 }
