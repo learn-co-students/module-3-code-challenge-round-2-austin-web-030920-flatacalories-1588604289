@@ -6,6 +6,7 @@ const name = document.getElementById("name")
 const image = document.getElementById("image")
 const calories = document.getElementById("calories")
 const calForm = document.getElementById("calories-form")
+const resetBtn = document.getElementById("reset-btn")
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -16,6 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     characters.addEventListener("change", displayCharacter)
     calForm.addEventListener("submit", addCalories)
+    resetBtn.addEventListener("click", resetCalories)
+    
 })
 
 function fetchUrl() {
@@ -24,7 +27,7 @@ function fetchUrl() {
     .then(json => console.log(json))
 }
 
-function patchUrl(newTotal) {
+function patchCalories(newTotal) {
     let e = characters.selectedIndex
     let caloriesPatch = {
         method: "PATCH",
@@ -62,12 +65,19 @@ function addCalories(event) {
     fetchUrl()
     let e = characters.selectedIndex-1
     let total = parseInt(characterInfo[e].calories)
-    newTotal = total + parseInt(event.target.cals.value)
+    let newTotal = total + parseInt(event.target.cals.value)
     calories.innerText = newTotal
-    patchUrl(newTotal)
+    patchCalories(newTotal)
 }
 
-    
+function resetCalories(event) {
+    event.preventDefault()
+    fetchUrl()
+    let e = characters.selectedIndex-1
+    let newTotal = 0
+    calories.innerText = newTotal
+    patchCalories(newTotal)
+}    
 
 
 
@@ -75,6 +85,3 @@ function addCalories(event) {
 // GET /characters
 // GET /characters/:id
 // PATCH /characters/:id
-// 
-// which means that we can use the second get/id with our display function to show the chosen character's info
-// but we need to figure out the dropdown menu first so that we know which character to show
