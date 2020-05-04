@@ -13,9 +13,32 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(rsp => rsp.json())
     .then(json => chooseCharacter(json))
 
+
     characters.addEventListener("change", displayCharacter)
     calForm.addEventListener("submit", addCalories)
 })
+
+function fetchUrl() {
+    fetch(url)
+    .then(rsp => rsp.json())
+    .then(json => console.log(json))
+}
+
+function patchUrl(newTotal) {
+    let e = characters.selectedIndex
+    let caloriesPatch = {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        body: JSON.stringify({calories: newTotal})
+    }
+
+    fetch(`http://localhost:3000/characters/${e}`, caloriesPatch)
+    .then(rsp => rsp.json())
+    .then(json => console.log(json))
+}
 
 function chooseCharacter(json) {
     characterInfo = json
@@ -34,35 +57,17 @@ function displayCharacter() {
     calories.innerText = characterInfo[e].calories
 }
 
-
-// add calories is sooooo close to being functional omg
-// the patch isn't right, ofc. also since i'm pulling the info in displayCharacter from the basic GET 
-// instead of the GEt/id, the patched information won't show up anyway.
-
-// notes: fix patch & fix GET info pulled in displayCharacter
-
 function addCalories(event) {
     event.preventDefault()
-    let total = characterInfo[characters.selectedIndex].calories
-    total += event.target.cals.value
-    calories.innerText = total
-    
-    let caloriesPatch = {
-        method: "PATCH",
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-        },
-        body: JSON.stringify({calories: characterInfo.calories})
-    }
-
-    fetch(`http://localhost:3000/characters/${characters.selectedIndex}`, caloriesPatch)
-    .then(rsp => rsp.json())
-    .then(json => console.log(json))
+    fetchUrl()
+    let e = characters.selectedIndex-1
+    let total = parseInt(characterInfo[e].calories)
+    newTotal = total + parseInt(event.target.cals.value)
+    calories.innerText = newTotal
+    patchUrl(newTotal)
 }
 
-
-
+    
 
 
 
